@@ -2,8 +2,9 @@
   "name": "fantasy-football",
   "version": "1.0.0",
   "description": "",
-  "main": "fantasy.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Kirk Pettinga",
@@ -14,5 +15,8 @@
     "express": "^4.18.1",
     "googleapis": "^107.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "engines": {
+    "node": "16.x"
+  }
 }

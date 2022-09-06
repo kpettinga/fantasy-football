@@ -1,4 +1,6 @@
-node_modules
-credentials.json
-token.json
 .DS_Store
+/*.env
+/node_modules
+credentials.json
+npm-debug.log
+token.json

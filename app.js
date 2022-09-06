@@ -1,4 +1,3 @@
-import process from 'process'
 import express from 'express'
 import { fetchMatchupResults } from './matchup.js'
 
@@ -19,4 +18,4 @@ app.get('/matchup-results', (req, res) => {
 
 })
 
-app.listen( process.env.port || 3000, () => console.log('Server is running...') )
+app.listen( process.env.PORT || 3000, () => console.log('Server is running...') )
