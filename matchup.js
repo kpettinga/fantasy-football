@@ -23,14 +23,37 @@ export const fetchMatchupResults = async (leagueId) => {
     // Handle Data
     function handleData(data) {
         const { schedule, scoringPeriodId } = data
-        const periodMatchups = schedule.filter( matchup => matchup.matchupPeriodId === scoringPeriodId )
         
         // create an object which will record each team's projected and actual score
         // this will later be used to write data to the spreadsheet
         const results = []
+        let matchupPeriod = 0
     
         // loop through each player in the roster and get their projected score
-        periodMatchups.forEach( matchup => {
+        schedule.forEach( matchup => {
+
+            // set matchupPeriod to 0-based number
+            matchupPeriod = matchup.matchupPeriodId - 1
+
+            if ( ! results[matchupPeriod] ) {
+                // create new array for the period
+                results[matchupPeriod] = []
+                // sort the previous period
+                if ( results[matchupPeriod - 1] ) {
+                    results[matchupPeriod - 1].sort( (a,b) => {
+                        if ( a.teamId > b.teamId ) {
+                            return 1
+                        } else if ( a.teamId < b.teamId ) {
+                            return -1
+                        } else {
+                            return 0
+                        }
+                    } )
+                }
+            }
+            if ( ! matchup.away.rosterForCurrentScoringPeriod || ! matchup.home.rosterForCurrentScoringPeriod ) {
+                return
+            }
             
             // get actual points scored in the matchup
             let awayTotalPoints = matchup.away.totalPoints
@@ -58,7 +81,7 @@ export const fetchMatchupResults = async (leagueId) => {
             favored = awayProjectedPoints > homeProjectedPoints ? 'away' : 'home'
     
             // push the scores to the results object using the teamId as the key
-            results.push({ 
+            results[matchupPeriod].push({ 
                 teamId: matchup.away.teamId,
                 projected: awayProjectedPoints, 
                 total: awayTotalPoints, 
@@ -66,7 +89,7 @@ export const fetchMatchupResults = async (leagueId) => {
                 upset: awayTotalPoints > homeTotalPoints && favored === 'home',
                 highScore: false,
             })
-            results.push({ 
+            results[matchupPeriod].push({ 
                 teamId: matchup.home.teamId,
                 projected: homeProjectedPoints, 
                 total: homeTotalPoints, 
@@ -106,6 +129,9 @@ export const fetchMatchupResults = async (leagueId) => {
     }
     
     function getRecord(homeScore, awayScore){ 
+        if ( homeScore === 0 && awayScore === 0 ) {
+            return null
+        }
         if ( homeScore > awayScore ) {
             return 'W' 
         } else if ( awayScore > homeScore ) {
