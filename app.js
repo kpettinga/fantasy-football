@@ -3,16 +3,14 @@ import { fetchMatchupResults } from './matchup.js'
 
 const app = express()
 
-app.get('/', (req, res) => {
-    res.send('hello world')
-})
+app.get('/matchup-results/:leagueId', (req, res) => {
 
-app.get('/matchup-results', (req, res) => {
+    if ( ! req.params.leagueId ) {
+        res.status = 400
+        res.send('A league ID is required')
+    }
 
-    const leagueId = 2134550616
-    // const leagueId = 763987037
-
-    fetchMatchupResults(leagueId).then( results => {
+    fetchMatchupResults(req.params.leagueId).then( results => {
         res.json(results)
     } )
 
