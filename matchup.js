@@ -67,14 +67,14 @@ export const fetchMatchupResults = async (leagueId) => {
                 const { lineupSlotId, playerPoolEntry: { player } } = rosterEntry
                 // only add up players with slot IDs 0 to 8. The rest are on the bench.
                 if ( isStarter(lineupSlotId) ) {
-                    awayProjectedPoints += player.stats[0].appliedTotal
+                    awayProjectedPoints += player.stats[player.stats.length - 1].appliedTotal
                 }
             } )
             matchup.home.rosterForCurrentScoringPeriod.entries.forEach( rosterEntry => {
                 const { lineupSlotId, playerPoolEntry: { player } } = rosterEntry
                 // only add up players with slot IDs 0 to 8. The rest are on the bench.
                 if ( isStarter(lineupSlotId) ) {
-                    homeProjectedPoints += player.stats[0].appliedTotal
+                    homeProjectedPoints += player.stats[player.stats.length - 1].appliedTotal
                 }
             } )
     
