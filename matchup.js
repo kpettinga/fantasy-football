@@ -87,7 +87,6 @@ export const fetchMatchupResults = async (leagueId) => {
                 total: awayTotalPoints, 
                 record: getRecord(awayTotalPoints, homeTotalPoints),
                 upset: awayTotalPoints > homeTotalPoints && favored === 'home',
-                highScore: false,
             })
             results[matchupPeriod].push({ 
                 teamId: matchup.home.teamId,
@@ -95,21 +94,8 @@ export const fetchMatchupResults = async (leagueId) => {
                 total: homeTotalPoints, 
                 record: getRecord(homeTotalPoints, awayTotalPoints),
                 upset: homeTotalPoints > awayTotalPoints && favored === 'away',
-                highScore: false,
             })
         })
-        
-        // determine high score
-        let highScorerIndex = 0;
-        const highScorer = results.reduce( (prev, curr, i, __results) => {
-            if ( curr.total > prev.total ) {
-                highScorerIndex = i
-                return curr
-            }
-            return prev
-        } )
-        
-        results[highScorerIndex].highScore = true
     
         return results
     }
